@@ -22,7 +22,7 @@ document.addEventListener('keydown', function (e) {
 
 // "Learn more" smooth scroll button
 btnScroll.addEventListener(`click`, function (e) {
-    e.preventDefault(e);
+    e.preventDefault();
     section1.scrollIntoView({ behavior: `smooth` });
 });
 
@@ -43,7 +43,8 @@ function openModal(e) {
 }
 
 // Hide register account form function
-function closeModal() {
+function closeModal(e) {
+    e.preventDefault();
     modal.classList.add('hidden');
     overlay.classList.add('hidden');
 }
