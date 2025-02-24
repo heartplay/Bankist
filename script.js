@@ -31,3 +31,16 @@ function closeModal() {
     modal.classList.add('hidden');
     overlay.classList.add('hidden');
 }
+
+// Smooth scroll testing
+const btnScroll = document.querySelector(`.btn--scroll-to`);
+const section1 = document.querySelector(`#section--1`);
+btnScroll.addEventListener(`click`, function (e) {
+    e.preventDefault(e);
+    const sect1Coords = section1.getBoundingClientRect();
+    window.scrollTo({
+        left: sect1Coords.left + window.pageXOffset,
+        top: sect1Coords.top + window.pageYOffset,
+        behavior: `smooth`,
+    });
+});
