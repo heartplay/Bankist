@@ -20,6 +20,8 @@ const tabsContainer = document.querySelector(`.operations__tab-container`);
 const tabsContent = document.querySelectorAll(`.operations__content`);
 // Navigation panel
 const nav = document.querySelector(`.nav`);
+// Header element for sticky navigation
+const header = document.querySelector(`.header`);
 
 // Modal account registration window
 // Opening the registration window by clicking on one of the buttons
@@ -71,7 +73,26 @@ tabsContainer.addEventListener(`click`, function (e) {
 nav.addEventListener(`mouseover`, handlerHoverOpacity.bind(0.5));
 nav.addEventListener(`mouseout`, handlerHoverOpacity.bind(1));
 
+// Sticky navigation panel
+// Calculate height of navigation panel
+const navHeight = nav.getBoundingClientRect().height;
+// Create observer
+const headerObserver = new IntersectionObserver(stickyNavigation, {
+    root: null,
+    threshold: 0,
+    rootMargin: `-${navHeight}px`,
+});
+// Set observer on header
+headerObserver.observe(header);
+
 // Functions
+
+// Sticky navigation function
+function stickyNavigation(entries) {
+    const [entry] = entries;
+    if (!entry.isIntersecting) nav.classList.add(`sticky`);
+    else nav.classList.remove(`sticky`);
+}
 
 // Show registration account form function
 function openModal(e) {
