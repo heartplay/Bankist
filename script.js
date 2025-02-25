@@ -22,6 +22,8 @@ const tabsContent = document.querySelectorAll(`.operations__content`);
 const nav = document.querySelector(`.nav`);
 // Header element for sticky navigation
 const header = document.querySelector(`.header`);
+// All sections for revealing them on scroll
+const allSections = document.querySelectorAll(`.section`);
 
 // Modal account registration window
 // Opening the registration window by clicking on one of the buttons
@@ -98,11 +100,12 @@ const headerObserver = new IntersectionObserver(stickyNavigation, {
 headerObserver.observe(header);
 
 // Revealing sections on scroll
-const allSections = document.querySelectorAll(`.section`);
+// Create observer
 const sectionsObserver = new IntersectionObserver(revealingSections, {
     root: null,
     threshold: 0.15,
 });
+// Hide all sections by default and set observers on them
 allSections.forEach((section) => {
     section.classList.add(`section--hidden`);
     sectionsObserver.observe(section);
