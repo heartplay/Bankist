@@ -1,5 +1,6 @@
 'use strict';
 
+// Selecting all needed elements
 // Registration account window
 const modal = document.querySelector('.modal');
 // Overlay for UI with opened registration account window
@@ -20,10 +21,12 @@ const tabsContainer = document.querySelector(`.operations__tab-container`);
 const tabsContent = document.querySelectorAll(`.operations__content`);
 // Navigation panel
 const nav = document.querySelector(`.nav`);
-// Header element for sticky navigation
+// Header
 const header = document.querySelector(`.header`);
-// All sections for revealing them on scroll
+// All sections
 const allSections = document.querySelectorAll(`.section`);
+// All images in first section
+const targetImg = document.querySelectorAll(`img[data-src]`);
 
 // Modal account registration window
 // Opening the registration window by clicking on one of the buttons
@@ -44,7 +47,7 @@ btnScroll.addEventListener(`click`, function (e) {
     section1.scrollIntoView({ behavior: `smooth` });
 });
 
-// Section navigation with event delegation
+// Sections navigation with event delegation
 document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
     e.preventDefault();
     if (e.target.classList.contains(`nav__link`) && !e.target.classList.contains(`btn--show-modal`)) {
@@ -52,6 +55,7 @@ document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
         document.querySelector(id).scrollIntoView({ behavior: `smooth` });
     }
 });
+// Testing for scroll to revealing sections
 // document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
 //     e.preventDefault();
 //     if (e.target.classList.contains(`nav__link`) && !e.target.classList.contains(`btn--show-modal`)) {
@@ -111,15 +115,42 @@ allSections.forEach((section) => {
     sectionsObserver.observe(section);
 });
 
+// Lazy load images
+// Create observer
+const imgObserver = new IntersectionObserver(imgLoad, {
+    root: null,
+    threshold: 0,
+    rootMargin: `-200px`,
+});
+// Set observer on all lazy loading images
+targetImg.forEach((img) => imgObserver.observe(img));
+
 //                                 Functions
+
+// Callback function for observer for lazy load images
+function imgLoad(entries, observer) {
+    const [entry] = entries;
+    // Guard clause
+    if (!entry.isIntersecting) return;
+    // Switch image to high resolution image
+    entry.target.src = entry.target.dataset.src;
+    // Disable blur effect on high resolution image
+    entry.target.addEventListener(`load`, () => entry.target.classList.remove(`lazy-img`));
+    // Disable observer
+    observer.unobserve(entry.target);
+}
 
 // Callback function for observer for revealing sections
 function revealingSections(entries, observer) {
     const [entry] = entries;
+    // Guard clause
     if (!entry.isIntersecting) return;
+    // Show section
     entry.target.classList.remove(`section--hidden`);
+    // Disable observer
     observer.unobserve(entry.target);
 }
+// Testing revealing
 function revealingSectionsTest(entries, observer) {
     const [entry] = entries;
     if (!entry.isIntersecting) entry.target.classList.add(`section--hidden`);
@@ -129,7 +160,9 @@ function revealingSectionsTest(entries, observer) {
 // Callback function for observer for sticky navigation
 function stickyNavigation(entries) {
     const [entry] = entries;
+    // Show navigation panel on top of viewport
     if (!entry.isIntersecting) nav.classList.add(`sticky`);
+    // Hide navigation panel
     else nav.classList.remove(`sticky`);
 }
 
