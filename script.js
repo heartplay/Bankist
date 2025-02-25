@@ -50,6 +50,18 @@ document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
         document.querySelector(id).scrollIntoView({ behavior: `smooth` });
     }
 });
+// document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
+//     e.preventDefault();
+//     if (e.target.classList.contains(`nav__link`) && !e.target.classList.contains(`btn--show-modal`)) {
+//         const id = e.target.getAttribute(`href`);
+//         const sectionCoords = document.querySelector(id).getBoundingClientRect();
+//         window.scrollTo({
+//             left: sectionCoords.left + window.pageXOffset,
+//             top: sectionCoords.top + window.pageYOffset - navHeight,
+//             behavior: `smooth`,
+//         });
+//     }
+// });
 
 // Tab navigation on second section
 tabsContainer.addEventListener(`click`, function (e) {
@@ -85,9 +97,33 @@ const headerObserver = new IntersectionObserver(stickyNavigation, {
 // Set observer on header
 headerObserver.observe(header);
 
-// Functions
+// Revealing sections on scroll
+const allSections = document.querySelectorAll(`.section`);
+const sectionsObserver = new IntersectionObserver(revealingSections, {
+    root: null,
+    threshold: 0.15,
+});
+allSections.forEach((section) => {
+    section.classList.add(`section--hidden`);
+    sectionsObserver.observe(section);
+});
 
-// Sticky navigation function
+//                                 Functions
+
+// Callback function for observer for revealing sections
+function revealingSections(entries, observer) {
+    const [entry] = entries;
+    if (!entry.isIntersecting) return;
+    entry.target.classList.remove(`section--hidden`);
+    observer.unobserve(entry.target);
+}
+function revealingSectionsTest(entries, observer) {
+    const [entry] = entries;
+    if (!entry.isIntersecting) entry.target.classList.add(`section--hidden`);
+    else entry.target.classList.remove(`section--hidden`);
+}
+
+// Callback function for observer for sticky navigation
 function stickyNavigation(entries) {
     const [entry] = entries;
     if (!entry.isIntersecting) nav.classList.add(`sticky`);
@@ -117,12 +153,12 @@ function handlerHoverOpacity(e) {
         // Selecting all links except hovered
         const siblings = link.closest(`.nav`).querySelectorAll(`.nav__link`);
         // Selecting logo
-        const logo = link.closest(`.nav`).querySelector(`img`);
+        // const logo = link.closest(`.nav`).querySelector(`img`);
         // Making all links semitransparent except hovered
         siblings.forEach((el) => {
             if (el !== link) el.style.opacity = this;
         });
         // Making logo semitransparent
-        logo.style.opacity = this;
+        // logo.style.opacity = this;
     }
 }
