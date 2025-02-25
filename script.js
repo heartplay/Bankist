@@ -35,6 +35,28 @@ document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
     }
 });
 
+// Tabs on section 2
+const tabs = document.querySelectorAll(`.operations__tab`);
+const tabsContainer = document.querySelector(`.operations__tab-container`);
+const tabsContent = document.querySelectorAll(`.operations__content`);
+
+tabsContainer.addEventListener(`click`, function (e) {
+    e.preventDefault();
+    // Select clicked tab
+    const clickedTab = e.target.closest(`.operations__tab`);
+    // Guard clause
+    if (!clickedTab) return;
+    // Remove active classes
+    tabs.forEach((tab) => tab.classList.remove(`operations__tab--active`));
+    tabsContent.forEach((content) => content.classList.remove(`operations__content--active`));
+    // Activate tab
+    clickedTab.classList.add(`operations__tab--active`);
+    // Activate content area
+    document
+        .querySelector(`.operations__content--${clickedTab.dataset.tab}`)
+        .classList.add(`operations__content--active`);
+});
+
 // Show registration account form function
 function openModal(e) {
     e.preventDefault();
