@@ -27,8 +27,18 @@ const header = document.querySelector(`.header`);
 const allSections = document.querySelectorAll(`.section`);
 // All images in first section
 const targetImg = document.querySelectorAll(`img[data-src]`);
+// Slider in third section
+const sliderContainer = document.querySelector(`.slider`);
+// All slides in slider
+const slides = document.querySelectorAll(`.slide`);
+// Left button for slider
+const btnLeft = document.querySelector(`.slider__btn--left`);
+// Right button for slider
+const btnRight = document.querySelector(`.slider__btn--right`);
+// Dot buttons container for slider
+const dotContainer = document.querySelector(`.dots`);
 
-// Initialization all functional
+// Initialization all functionality
 init();
 
 function init() {
@@ -48,6 +58,8 @@ function init() {
     revealingSections();
     // Lazy loading of images on first section
     lazyLoadImg();
+    // Slider in third section
+    slider();
 }
 
 // Modal account registration window
@@ -221,6 +233,92 @@ function lazyLoadImg() {
         observer.unobserve(entry.target);
     }
 }
+
+// Slider
+function slider() {
+    // Caclulate zero based amount of slides
+    const maxSlide = slides.length - 1;
+    // Set current slide to show
+    let currentSlide = 0;
+    // Initialization slider
+    initSlider();
+    // Event listeners for click on dot buttons for navigating slides
+    dotContainer.addEventListener(`click`, function (e) {
+        if (e.target.classList.contains(`dots__dot`)) {
+            // Set current slide according to which dot button is clicked
+            currentSlide = +e.target.dataset.slide;
+            // Show current slide
+            goToSlide(currentSlide);
+            // Highlight current slide dot button
+            activateDot();
+        }
+    });
+    // Event listeners for click on left and right buttons for navigating slides
+    btnRight.addEventListener(`click`, nextSlide);
+    btnLeft.addEventListener(`click`, prevSlide);
+    // Event listeners for pressing left and right arrow on keyboard for navigating slides
+    document.addEventListener(`keydown`, (e) => {
+        e.key == `ArrowLeft` && prevSlide();
+        e.key == `ArrowRight` && nextSlide();
+    });
+
+    // Init function for slider
+    function initSlider() {
+        // Create dot buttons for each slide
+        createDots();
+        // Show initial slide
+        goToSlide(currentSlide);
+        // Highlight initial slide dot button
+        activateDot();
+    }
+
+    // Show current slide
+    function goToSlide(currentSlide) {
+        slides.forEach((slide, i) => (slide.style.transform = `translateX(${100 * (i - currentSlide)}%)`));
+    }
+
+    // Show previous slide
+    function prevSlide() {
+        if (currentSlide == 0) currentSlide = maxSlide;
+        else currentSlide--;
+        goToSlide(currentSlide);
+        activateDot();
+    }
+
+    // Show next slide
+    function nextSlide() {
+        if (currentSlide == maxSlide) currentSlide = 0;
+        else currentSlide++;
+        goToSlide(currentSlide);
+        activateDot();
+    }
+
+    // Create dot buttons for each slide
+    function createDots() {
+        slides.forEach((_, i) => {
+            // Creating html button with data number according to slide index
+            dotContainer.insertAdjacentHTML(
+                `beforeend`,
+                `
+                <button class="dots__dot" data-slide="${i}"></button>
+                `
+            );
+        });
+    }
+
+    // Highlight current slide dot button
+    function activateDot() {
+        // Remove active classes
+        document.querySelectorAll(`.dots__dot`).forEach((dot) => dot.classList.remove(`dots__dot--active`));
+        // Activate dot
+        document.querySelector(`.dots__dot[data-slide="${currentSlide}"]`).classList.add(`dots__dot--active`);
+    }
+}
+
+// slider.style.transform = `scale(0.4) translateX(-1000px)`;
+// slider.style.overflow = `visible`;
+
+// slides.forEach((slide, i) => (slide.style.transform = `translateX(${100 * i}%)`));
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////                                  TESTING                        /////////////////////////////////////////
