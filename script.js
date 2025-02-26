@@ -232,3 +232,18 @@ function revealingSectionsTest(entries, observer) {
     if (!entry.isIntersecting) entry.target.classList.add(`section--hidden`);
     else entry.target.classList.remove(`section--hidden`);
 }
+
+// CLASS SECTION HIDDEN TRANSLATEY
+// Testing for scroll to revealing sections
+// document.querySelector(`.nav__links`).addEventListener(`click`, function (e) {
+//     e.preventDefault();
+//     if (e.target.classList.contains(`nav__link`) && !e.target.classList.contains(`btn--show-modal`)) {
+//         const id = e.target.getAttribute(`href`);
+//         const sectionCoords = document.querySelector(id).getBoundingClientRect();
+//         window.scrollTo({
+//             left: sectionCoords.left + window.pageXOffset,
+//             top: sectionCoords.top + window.pageYOffset - navHeight,
+//             behavior: `smooth`,
+//         });
+//     }
+// });
