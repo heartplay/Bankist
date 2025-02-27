@@ -65,7 +65,7 @@ function init() {
     lazyLoadImg();
     // Slider in third section
     slider();
-
+    // Keyboard up/down arrow navigation after revealing last section
     sectionsKeyboardNavigation();
 }
 
@@ -216,6 +216,7 @@ function revealingSections() {
         // // Disable observer
         // // observer.unobserve(entry.target);
 
+        // If section on 15% visibility - reveal, if 50% - set this section as current section
         entries.forEach((entry) => {
             if (entry.intersectionRatio >= 0.15) entry.target.classList.remove(`section--hidden`);
             if (entry.intersectionRatio >= 0.3) {
@@ -225,18 +226,27 @@ function revealingSections() {
     }
 }
 
+// Keyboard sections navigation
 function sectionsKeyboardNavigation() {
+    // Calculate max number of section
     const maxSection = allSections.length;
+    // Create observer for last section
     const singUpSectionObserver = new IntersectionObserver(activateArrowNavigation, {
         root: null,
         threshold: 0.15,
     });
+    // Set observer on last section
     singUpSectionObserver.observe(signUpSection);
+    // Callback function for observer
     function activateArrowNavigation(entries, observer) {
         const [entry] = entries;
+        // Guard clause
         if (!entry.isIntersecting) return;
+        // Set current section according to which section is showing on viewport
         currentSection = signUpSection.dataset.section;
+        // Disable observer after last section is revealed
         observer.unobserve(signUpSection);
+        // Event listeners for up/down arrow key for sections navigation
         document.addEventListener(`keydown`, function (e) {
             if (e.key == `ArrowUp`) {
                 prevSection(e);
@@ -246,15 +256,18 @@ function sectionsKeyboardNavigation() {
             }
         });
     }
+    // Show current section
     function goToSection(section) {
         document.querySelector(`#section--${section}`).scrollIntoView({ behavior: `smooth` });
     }
+    // Show previous section
     function prevSection(e) {
         e.preventDefault();
         if (currentSection == 1) currentSection = maxSection;
         else currentSection--;
         goToSection(currentSection);
     }
+    // Show next section
     function nextSection(e) {
         e.preventDefault();
         if (currentSection == maxSection) currentSection = 1;
@@ -305,7 +318,7 @@ function slider() {
             goToSlide(currentSlide);
             // Highlight current slide dot button
             activateDot();
-            clearInterval(timer);
+            clearTimeout(timer);
             timer = slideShow();
         }
     });
@@ -340,7 +353,7 @@ function slider() {
     function prevSlide() {
         if (currentSlide == 0) currentSlide = maxSlide;
         else currentSlide--;
-        clearInterval(timer);
+        clearTimeout(timer);
         goToSlide(currentSlide);
         activateDot();
         timer = slideShow();
@@ -350,7 +363,7 @@ function slider() {
     function nextSlide() {
         if (currentSlide == maxSlide) currentSlide = 0;
         else currentSlide++;
-        clearInterval(timer);
+        clearTimeout(timer);
         goToSlide(currentSlide);
         activateDot();
         timer = slideShow();
@@ -376,9 +389,9 @@ function slider() {
         // Activate dot
         document.querySelector(`.dots__dot[data-slide="${currentSlide}"]`).classList.add(`dots__dot--active`);
     }
-
+    // Show next slide every 10 sec.
     function slideShow() {
-        return setInterval(nextSlide, 10000);
+        return setTimeout(nextSlide, 10000);
     }
 }
 
