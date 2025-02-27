@@ -305,8 +305,8 @@ function slider() {
             goToSlide(currentSlide);
             // Highlight current slide dot button
             activateDot();
-            clearInterval(timer);
-            timer = slideShow();
+            // clearInterval(timer);
+            // timer = slideShow();
         }
     });
     // Event listeners for click on left and right buttons for navigating slides
@@ -328,7 +328,7 @@ function slider() {
         // Highlight initial slide dot button
         activateDot();
 
-        timer = slideShow();
+        // timer = slideShow();
     }
 
     // Show current slide
@@ -340,20 +340,20 @@ function slider() {
     function prevSlide() {
         if (currentSlide == 0) currentSlide = maxSlide;
         else currentSlide--;
-        clearInterval(timer);
+        // clearInterval(timer);
         goToSlide(currentSlide);
         activateDot();
-        timer = slideShow();
+        // timer = slideShow();
     }
 
     // Show next slide
     function nextSlide() {
         if (currentSlide == maxSlide) currentSlide = 0;
         else currentSlide++;
-        clearInterval(timer);
+        // clearInterval(timer);
         goToSlide(currentSlide);
         activateDot();
-        timer = slideShow();
+        // timer = slideShow();
     }
 
     // Create dot buttons for each slide
@@ -377,9 +377,9 @@ function slider() {
         document.querySelector(`.dots__dot[data-slide="${currentSlide}"]`).classList.add(`dots__dot--active`);
     }
 
-    function slideShow() {
-        return setInterval(nextSlide, 10000);
-    }
+    // function slideShow() {
+    //     return setInterval(nextSlide, 10000);
+    // }
 }
 
 // slider.style.transform = `scale(0.4) translateX(-1000px)`;
