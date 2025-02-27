@@ -47,6 +47,8 @@ init();
 
 function init() {
     currentSection = 1;
+    // Cookie message
+    cookieMessage();
     // Registration window
     registrationWindow();
     // Sections navigation
@@ -67,6 +69,26 @@ function init() {
     slider();
     // Keyboard up/down arrow navigation after revealing last section
     sectionsKeyboardNavigation();
+}
+
+// Create cookie message
+function cookieMessage() {
+    // Create div element
+    const cookie = document.createElement(`div`);
+    // Add cookie class to element
+    cookie.classList.add(`cookie-message`);
+    // Put text content and close button
+    cookie.innerHTML = `We use cookies for improved functionality and analytics.<button class="btn btn--close-cookie">Got it!</button>`;
+    // Insert element in header as last child of header
+    header.append(cookie);
+    // Event listener for click on close cookie button
+    document.querySelector(`.btn--close-cookie`).addEventListener(`click`, () => cookie.remove());
+    // Changing background color
+    cookie.style.backgroundColor = `#37383d`;
+    // Changing height and width according to viewport width
+    // cookie.style.width = getComputedStyle(document.documentElement).width;
+    cookie.style.width = document.documentElement.clientWidth;
+    cookie.style.height = parseFloat(getComputedStyle(cookie).height, 10) + 30 + `px`;
 }
 
 // Modal account registration window
@@ -318,6 +340,7 @@ function slider() {
             goToSlide(currentSlide);
             // Highlight current slide dot button
             activateDot();
+            // Rerun slideshow
             clearTimeout(timer);
             timer = slideShow();
         }
@@ -340,7 +363,7 @@ function slider() {
         goToSlide(currentSlide);
         // Highlight initial slide dot button
         activateDot();
-
+        // Activate slideshow
         timer = slideShow();
     }
 

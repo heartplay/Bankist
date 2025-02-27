@@ -671,4 +671,11 @@ h4 {
     color: #bbb;
     font-size: 1.5rem;
     font-weight: 400;
+    position: fixed;
+    bottom: 0;
+    z-index: 100;
 }
+/* .cookie-message.sticky {
+    background-color: rgba(255, 255, 255, 0.95);
+    bottom: 0;
+} */
