@@ -37,6 +37,10 @@ const btnLeft = document.querySelector(`.slider__btn--left`);
 const btnRight = document.querySelector(`.slider__btn--right`);
 // Dot buttons container for slider
 const dotContainer = document.querySelector(`.dots`);
+// Sign up section
+const signUpSection = document.querySelector(`.section--sign-up`);
+
+let currentSection = 1;
 
 // Initialization all functionality
 init();
@@ -60,6 +64,8 @@ function init() {
     lazyLoadImg();
     // Slider in third section
     slider();
+
+    sectionsKeyboardNavigation();
 }
 
 // Modal account registration window
@@ -189,7 +195,8 @@ function revealingSections() {
     // Create observer
     const sectionsObserver = new IntersectionObserver(revealingSections, {
         root: null,
-        threshold: 0.15,
+        // threshold: 0.15,
+        threshold: [0.15, 0.3],
     });
     // Hide all sections by default and set observers on them
     allSections.forEach((section) => {
@@ -199,13 +206,59 @@ function revealingSections() {
 
     // Callback function for observer for revealing sections
     function revealingSections(entries, observer) {
+        // const [entry] = entries;
+        // // Guard clause
+        // if (!entry.isIntersecting) return;
+        // // Show section
+        // entry.target.classList.remove(`section--hidden`);
+        // currentSection = entry.target.dataset.section;
+        // // Disable observer
+        // // observer.unobserve(entry.target);
+
+        entries.forEach((entry) => {
+            if (entry.intersectionRatio >= 0.15) entry.target.classList.remove(`section--hidden`);
+            if (entry.intersectionRatio >= 0.3) {
+                currentSection = entry.target.dataset.section;
+            }
+        });
+    }
+}
+
+function sectionsKeyboardNavigation() {
+    const maxSection = allSections.length;
+    const singUpSectionObserver = new IntersectionObserver(activateArrowNavigation, {
+        root: null,
+        threshold: 0.15,
+    });
+    singUpSectionObserver.observe(signUpSection);
+    function activateArrowNavigation(entries, observer) {
         const [entry] = entries;
-        // Guard clause
         if (!entry.isIntersecting) return;
-        // Show section
-        entry.target.classList.remove(`section--hidden`);
-        // Disable observer
-        observer.unobserve(entry.target);
+        currentSection = signUpSection.dataset.section;
+        observer.unobserve(signUpSection);
+        document.addEventListener(`keydown`, function (e) {
+            if (e.key == `ArrowUp`) {
+                prevSection(e);
+            }
+            if (e.key == `ArrowDown`) {
+                nextSection(e);
+            }
+        });
+    }
+    function goToSection(section) {
+        document.querySelector(`#section--${section}`).scrollIntoView({ behavior: `smooth` });
+    }
+    function prevSection(e) {
+        e.preventDefault();
+        if (currentSection == 1) currentSection = maxSection;
+        else currentSection--;
+        goToSection(currentSection);
+    }
+    function nextSection(e) {
+        e.preventDefault();
+        if (currentSection == maxSection) currentSection = 1;
+        else currentSection++;
+        goToSection(currentSection);
     }
 }
 
@@ -258,6 +311,7 @@ function slider() {
     btnLeft.addEventListener(`click`, prevSlide);
     // Event listeners for pressing left and right arrow on keyboard for navigating slides
     document.addEventListener(`keydown`, (e) => {
+        // e.preventDefault();
         e.key == `ArrowLeft` && prevSlide();
         e.key == `ArrowRight` && nextSlide();
     });
