@@ -40,12 +40,13 @@ const dotContainer = document.querySelector(`.dots`);
 // Sign up section
 const signUpSection = document.querySelector(`.section--sign-up`);
 
-let currentSection = 1;
+let currentSection, timer;
 
 // Initialization all functionality
 init();
 
 function init() {
+    currentSection = 1;
     // Registration window
     registrationWindow();
     // Sections navigation
@@ -304,6 +305,8 @@ function slider() {
             goToSlide(currentSlide);
             // Highlight current slide dot button
             activateDot();
+            clearInterval(timer);
+            timer = slideShow();
         }
     });
     // Event listeners for click on left and right buttons for navigating slides
@@ -324,6 +327,8 @@ function slider() {
         goToSlide(currentSlide);
         // Highlight initial slide dot button
         activateDot();
+
+        timer = slideShow();
     }
 
     // Show current slide
@@ -335,16 +340,20 @@ function slider() {
     function prevSlide() {
         if (currentSlide == 0) currentSlide = maxSlide;
         else currentSlide--;
+        clearInterval(timer);
         goToSlide(currentSlide);
         activateDot();
+        timer = slideShow();
     }
 
     // Show next slide
     function nextSlide() {
         if (currentSlide == maxSlide) currentSlide = 0;
         else currentSlide++;
+        clearInterval(timer);
         goToSlide(currentSlide);
         activateDot();
+        timer = slideShow();
     }
 
     // Create dot buttons for each slide
@@ -366,6 +375,10 @@ function slider() {
         document.querySelectorAll(`.dots__dot`).forEach((dot) => dot.classList.remove(`dots__dot--active`));
         // Activate dot
         document.querySelector(`.dots__dot[data-slide="${currentSlide}"]`).classList.add(`dots__dot--active`);
+    }
+
+    function slideShow() {
+        return setInterval(nextSlide, 10000);
     }
 }
 
